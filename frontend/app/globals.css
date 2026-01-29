@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Inter", "sans-serif";
+    --font-serif: "Playfair Display", "serif";
+
+    /* 
+     Palette:
+     Khaki Beige: #c3a995
+     Dusty Taupe: #ab947e
+     Ash Brown: #6f5e53
+     Dusty Taupe 2: #8a7968
+     Chocolate Plum: #593d3b
+  */
+
+    /* Dark Espresso Theme Mapping */
+    --color-background: #1a1210;
+    /* Very Dark Espresso */
+    --color-foreground: #eaddcf;
+    /* Creamy Beige Text */
+
+    --color-card: #2d1b19;
+    /* Dark Chocolate Card Background */
+    --color-card-foreground: #eaddcf;
+
+    --color-primary: #c3a995;
+    /* Khaki Beige (High contrast against dark) */
+    --color-primary-foreground: #2d1b19;
+    /* Dark brown text on beige button */
+    --color-primary-hover: #d4bda8;
+
+    --color-secondary: #3e2b29;
+    /* Slightly lighter chocolate */
+    --color-secondary-foreground: #c3a995;
+
+    --color-muted: #2d1b19;
+    --color-muted-foreground: #8a7968;
+    /* Dusty Taupe for secondary text */
+
+    --color-border: #3e2b29;
+    /* Subtle border */
+    --color-input: #0f0a09;
+    /* Deepest brown for inputs */
+
+    --color-accent: #6f5e53;
+    /* Ash Brown */
+    --color-success: #ab947e;
+    /* Using Dusty Taupe as a 'positive' neutral indicator */
+}
+
+body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    /* Optional: subtle noise texture for "paper" feel in dark mode */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-serif);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1210;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3e2b29;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #593d3b;
+}

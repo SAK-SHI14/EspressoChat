@@ -1,0 +1,28 @@
+services:
+  # Backend Service
+  - type: web
+    name: chatapp-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: MONGO_URI
+        fromConnectionString: mongodb_connection_string
+
+  # Frontend Service
+  - type: web
+    name: chatapp-frontend
+    env: node
+    rootDir: frontend/chat-frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: chatapp-backend
+          property: url

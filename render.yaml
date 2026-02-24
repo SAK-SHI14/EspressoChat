@@ -9,13 +9,19 @@ services:
       - key: PYTHON_VERSION
         value: 3.9.0
       - key: MONGO_URI
-        fromConnectionString: mongodb_connection_string
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
 
   # Frontend Service
   - type: web
     name: chatapp-frontend
     env: node
-    rootDir: frontend/chat-frontend
+    rootDir: frontend
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:

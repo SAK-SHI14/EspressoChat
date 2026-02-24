@@ -6,7 +6,7 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'c:\Users\SAKS
 
 # Start Frontend in a new window
 Write-Host "Launching Frontend (Next.js)..." -ForegroundColor Cyan
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'c:\Users\SAKSHI VERMA\Documents\Chat\frontend\chat-frontend'; npm run dev"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'c:\Users\SAKSHI VERMA\Documents\Chat\frontend'; npm run dev"
 
 Write-Host "Both services started!" -ForegroundColor Green
 Write-Host "Backend: http://localhost:8000"

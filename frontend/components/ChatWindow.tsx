@@ -28,7 +28,11 @@ export default function ChatWindow({ chat, currentUser }: ChatWindowProps) {
 
     useEffect(() => {
         fetchHistory();
-        const ws = new WebSocket(`ws://localhost:8000/ws/${currentUser}`);
+        const token = sessionStorage.getItem("token");
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        const wsProtocol = apiBaseUrl.startsWith("https") ? "wss" : "ws";
+        const wsHost = apiBaseUrl.replace(/^https?:\/\//, "");
+        const ws = new WebSocket(`${wsProtocol}://${wsHost}/ws?token=${token}`);
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -38,7 +42,17 @@ export default function ChatWindow({ chat, currentUser }: ChatWindowProps) {
             } else if (chat.type === "group") {
                 if (data.type === "group" && data.group_name === chat.id) isRelevant = true;
             }
-            if (isRelevant) setMessages((prev) => [...prev, data]);
+            if (isRelevant) {
+                setMessages((prev) => {
+                    // Primitive de-duplication: check if same sender and message in last 2 seconds
+                    const isDuplicate = prev.some(m =>
+                        m.sender === data.sender &&
+                        m.message === data.message &&
+                        Math.abs(new Date(m.timestamp).getTime() - new Date(data.timestamp).getTime()) < 2000
+                    );
+                    return isDuplicate ? prev : [...prev, data];
+                });
+            }
         };
 
         socketRef.current = ws;
@@ -96,7 +110,10 @@ export default function ChatWindow({ chat, currentUser }: ChatWindowProps) {
                                 </div>
                                 <span className="text-[10px] text-[#6f5e53] mt-2 font-bold tracking-widest opacity-60">
                                     {isMe ? "YOU • " : `${msg.sender.toUpperCase()} • `}
-                                    {new Date(typeof msg.timestamp === 'number' ? msg.timestamp * 1000 : msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    {(() => {
+                                        const d = new Date(msg.timestamp);
+                                        return isNaN(d.getTime()) ? "Just now" : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                    })()}
                                 </span>
                             </div>
                         </div>

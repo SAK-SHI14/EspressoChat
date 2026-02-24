@@ -97,18 +97,29 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 from fastapi import WebSocket, WebSocketDisconnect
 from manager import manager
-import json
+from jose import jwt, JWTError
+from auth import SECRET_KEY, ALGORITHM
 
-@app.websocket("/ws/{username}")
-async def websocket_endpoint(websocket: WebSocket, username: str):
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, token: str = None):
+    if not token:
+        await websocket.close(code=4001)
+        return
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username = payload.get("sub")
+        if not username:
+            await websocket.close(code=4002)
+            return
+    except JWTError:
+        await websocket.close(code=4003)
+        return
+
     await manager.connect(websocket, username)
     try:
         while True:
-            # Keep the connection alive and listen for incoming messages (optional, if we want full WS chat)
-            # For now, we mainly use this for receiving updates pushed from REST API
-            data = await websocket.receive_text()
-            # We can handle client-sent WebSocket messages here if needed in future
-            # await manager.send_personal_message(f"You wrote: {data}", username)
+            await websocket.receive_text()
     except WebSocketDisconnect:
         manager.disconnect(websocket, username)
     except Exception as e:

@@ -40,7 +40,7 @@ async def send_message(
                 "group_name": data.group_name,
                 "sender": current_user,
                 "message": data.message,
-                "timestamp": datetime.utcnow().timestamp()
+                "timestamp": datetime.utcnow().isoformat()
             }, group["members"])
 
     return {

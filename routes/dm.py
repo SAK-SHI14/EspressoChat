@@ -25,7 +25,7 @@ async def send_dm_message(
             "type": "dm",
             "sender": current_user,
             "message": data.message,
-            "timestamp": datetime.utcnow().timestamp()
+            "timestamp": datetime.utcnow().isoformat()
         }, data.receiver)
         
         # Also push to sender (so they see their own message if they have multiple tabs open)
@@ -33,7 +33,7 @@ async def send_dm_message(
             "type": "dm",
             "sender": current_user,
             "message": data.message,
-            "timestamp": datetime.utcnow().timestamp()
+            "timestamp": datetime.utcnow().isoformat()
         }, current_user)
 
     return {"status": result}
